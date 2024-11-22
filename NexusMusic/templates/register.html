@@ -1,0 +1,91 @@
+{% load static %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'css/stylesLogin.css' %}">
+</head>
+<style>
+    /* From Uiverse.io by ArturCodeCraft */
+    /* <reset-style> ============================ */
+    a {
+        text-decoration: none;
+        text-align: center;
+    }
+
+    /* <main-style> ============================ */
+    .menu__link {
+        color: black;
+        line-height: 2;
+        position: relative;
+    }
+
+    .menu__link::before {
+        content: '';
+        width: 0;
+        height: 2px;
+        border-radius: 2px;
+        background-color: black;
+        position: absolute;
+        bottom: -.25rem;
+        left: 50%;
+        transition: width .4s, left .4s;
+    }
+
+    .menu__link:hover::before {
+        width: 100%;
+        left: 0;
+    }
+</style>
+
+<body>
+    <div class="form-container">
+        <h2>Registro de Usuario</h2>
+        <div class="image-container">
+            <img src="{% static 'Logo.png' %}" alt="Imagen de ejemplo">
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Nombre de usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password1">Contraseña</label>
+                <input type="password" id="password1" name="password1" required>
+            </div>
+            <div class="form-group">
+                <label for="password2">Confirmar Contraseña</label>
+                <input type="password" id="password2" name="password2" required>
+            </div>
+            <div class="container-button">
+                <button type="submit" class="submit-btn">Registrar</button>
+
+            </div>
+
+            <a href="{% url 'login' %}" class="menu__link">
+                <div>
+                    <span>SING UP / </span>
+                    <span>LOGIN</span>
+                </div>
+            </a>
+
+        </form>
+    </div>
+</body>
+
+</html>
+
+{% endblock %}

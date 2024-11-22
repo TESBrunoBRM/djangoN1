@@ -1,0 +1,58 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuenta</title>
+    <link rel="stylesheet" href="{% static 'css/stylesHome.css' %}">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'playlist' %}">Playlist</a></li>
+            <li><a href="{% url 'account' %}">Cuenta</a></li>
+            <li><a href="{% url 'search' %}">Búsqueda</a></li>
+            <li><a href="{% url 'studio' %}">Studio</a></li>
+            <li><a href="{% url 'logout' %}" class="logout-link">Cerrar sesión</a></li>
+        </ul>
+        <div class="profile-picture">
+            {% if request.user.profile.profile_picture %}
+            <img src="{{ request.user.profile.profile_picture.url }}" alt="Foto de perfil">
+            {% else %}
+            <img src="{% static 'default_profile.png' %}" alt="Foto de perfil por defecto">
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Perfil de {{ request.user.username }}</h1>
+        <p>Nombre: {{ request.user.get_full_name }}</p>
+        <p>Email: {{ request.user.email }}</p>
+        <p>Canciones subidas: {{ songs.count }}</p>
+
+        <h2>Editar Perfil</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+            <button type="submit">Actualizar</button>
+        </form>
+
+        <h2>Tus Canciones Subidas</h2>
+        <ul>
+            {% for song in songs %}
+            <li>{{ song.title }} - Subida el {{ song.uploaded_at }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+
+</html>
+
+
+{% endblock %}

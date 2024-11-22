@@ -1,0 +1,35 @@
+{% load static %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist</title>
+    <link rel="stylesheet" href="{% static 'css/stylesHome.css' %}">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'playlist' %}">Playlist</a></li>
+            <li><a href="{% url 'account' %}">Cuenta</a></li>
+            <li><a href="{% url 'search' %}">Búsqueda</a></li>
+            <li><a href="{% url 'studio' %}">Studio</a></li>
+            <li><a href="{% url 'logout' %}" class="logout-link">Cerrar sesión</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Tus Playlists</h1>
+        <p>Aquí puedes ver y gestionar tus playlists.</p>
+        <!-- Agrega la lista de playlists aquí -->
+    </div>
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,228 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio</title>
+    <link rel="stylesheet" href="{% static 'css/stylesHome.css' %}">
+    <style>
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        button {
+            display: flex;
+            justify-content: center;
+            width: 250px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .song-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .song-list li {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .song-list li strong {
+            font-size: 1.1em;
+        }
+
+        audio {
+            margin-left: 20px;
+            width: 300px;
+        }
+
+        .empty-message {
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .textInputWrapper {
+            position: relative;
+            width: 870px;
+            margin: 12px 5px;
+            --accent-color: #8138ff;
+        }
+
+        .textInputWrapper:before {
+            transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+        }
+
+        .textInputWrapper:before,
+        .textInputWrapper:after {
+            content: "";
+            left: 0;
+            right: 0;
+            position: absolute;
+            pointer-events: none;
+            bottom: -1px;
+            z-index: 4;
+            width: 100%;
+        }
+
+        .textInputWrapper:focus-within:before {
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .textInputWrapper:before {
+            transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+        }
+
+        .textInputWrapper:focus-within:before {
+            border-bottom: 1px solid var(--accent-color);
+            transform: scaleX(1);
+        }
+
+        .textInputWrapper:focus-within:after {
+            border-bottom: 2px solid var(--accent-color);
+            transform: scaleX(1);
+        }
+
+        .textInputWrapper:after {
+            content: "";
+            transform: scaleX(0);
+            transition: transform 250ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+            will-change: transform;
+            border-bottom: 2px solid var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .textInput::placeholder {
+            transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+            opacity: 1;
+            user-select: none;
+            color: rgba(255, 255, 255, 0.582);
+        }
+
+        .textInputWrapper .textInput {
+            border-radius: 5px 5px 0px 0px;
+            box-shadow: 0px 2px 5px rgb(35 35 35 / 30%);
+            max-height: 36px;
+            background-color: #252525;
+            transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition-duration: 200ms;
+            transition-property: background-color;
+            color: #e8e8e8;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px;
+            width: 100%;
+            border-left: none;
+            border-bottom: none;
+            border-right: none;
+        }
+
+        .textInputWrapper .textInput:focus,
+        .textInputWrapper .textInput:active {
+            outline: none;
+        }
+
+        .textInputWrapper:focus-within .textInput,
+        .textInputWrapper .textInput:focus,
+        .textInputWrapper .textInput:active {
+            background-color: #353535;
+        }
+
+        .textInputWrapper:focus-within .textInput::placeholder {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'playlist' %}">Playlist</a></li>
+            <li><a href="{% url 'account' %}">Cuenta</a></li>
+            <li><a href="{% url 'search' %}">Búsqueda</a></li>
+            <li><a href="{% url 'studio' %}">Studio</a></li>
+            <li><a href="{% url 'logout' %}" class="logout-link">Cerrar sesión</a></li>
+        </ul>
+    </nav>
+    <div class="profile-picture-navbar">
+        {% if request.user.profile.profile_picture %}
+        <img src="{{ request.user.profile.profile_picture.url }}" alt="Foto de perfil" class="navbar-profile-pic">
+        {% else %}
+        <img src="{% static 'default_profile.png' %}" alt="Foto de perfil por defecto" class="navbar-profile-pic">
+        {% endif %}
+    </div>
+    <div class="container">
+        <h1>Studio</h1>
+        <p>Sube tus pistas, audios y más.</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="textInputWrapper">
+                <input placeholder="Título de la canción" type="text" class="textInput" name="title" required>
+            </div>
+            <div class="textInputWrapper">
+                <input placeholder="Artista (opcional)" type="text" class="textInput" name="artist" required>
+            </div>
+            <div class="container1" name="audio_audio" required>
+                <div class="folder">
+                    <div class="top"></div>
+                    <div class="bottom"></div>
+                </div>
+                <label class="custom-file-upload">
+                    <input class="file" type="file" name="audio_file" />
+                    Seleccionar archivo
+                </label>
+            </div>
+            <div class="container-button">
+                <button type="submit" class="button">Subir</button>
+            </div>
+
+        </form>
+
+        <h2>Tus Canciones Subidas</h2>
+        {% if songs %}
+        <ul class="song-list">
+            {% for song in songs %}
+            <li>
+                <div>
+                    <strong>{{ song.title }}</strong> - Subida el {{ song.uploaded_at }}
+                </div>
+                <audio controls>
+                    <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                    Tu navegador no soporta la reproducción de audio.
+                </audio>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty-message">No has subido ninguna canción aún.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>
+{% endblock %}

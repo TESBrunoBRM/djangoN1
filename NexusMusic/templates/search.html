@@ -1,0 +1,39 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda</title>
+    <link rel="stylesheet" href="{% static 'css/stylesHome.css' %}">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'playlist' %}">Playlist</a></li>
+            <li><a href="{% url 'account' %}">Cuenta</a></li>
+            <li><a href="{% url 'search' %}">Búsqueda</a></li>
+            <li><a href="{% url 'studio' %}">Studio</a></li>
+            <li><a href="{% url 'logout' %}" class="logout-link">Cerrar sesión</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Búsqueda de Música</h1>
+        <p>Busca canciones, artistas o álbumes.</p>
+        <form method="get" action="">
+            <input type="text" placeholder="Buscar..." name="query">
+            <button type="submit">Buscar</button>
+        </form>
+        <!-- Agrega resultados de búsqueda -->
+    </div>
+</body>
+
+</html>
+
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="{% static 'css/stylesLogin.css' %}">
+</head>
+<style>
+    /* From Uiverse.io by ArturCodeCraft */
+    /* <reset-style> ============================ */
+    a {
+        text-decoration: none;
+        text-align: center;
+    }
+
+    /* <main-style> ============================ */
+    .menu__link {
+        color: black;
+        line-height: 2;
+        position: relative;
+    }
+
+    .menu__link::before {
+        content: '';
+        width: 0;
+        height: 2px;
+        border-radius: 2px;
+        background-color: black;
+        position: absolute;
+        bottom: -.25rem;
+        left: 50%;
+        transition: width .4s, left .4s;
+    }
+
+    .menu__link:hover::before {
+        width: 100%;
+        left: 0;
+    }
+</style>
+
+<body>
+    <div class="form-container">
+        <h2>Iniciar Sesión</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Nombre de usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="container-button">
+                <button type="submit" class="submit-btn">Iniciar Sesión</button>
+            </div>
+            <div class="container-a">
+                <a href="{% url 'register' %}" class="menu__link">
+                    <div class="container-a">
+                        <span>LOGIN / </span>
+                        <span>SIGN UP</span>
+                    </div>
+                </a>
+            </div>
+        </form>
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>
+{% endblock %}
