@@ -68,7 +68,26 @@ def user_login(request):
 
 
 def home(request):
-    return render(request, 'home.html', {'message': 'Bienvenido a Nexus Music'})
+    # Mensaje de bienvenida
+    message = "Bienvenido a Nexus Music"
+
+    # Obtener las canciones subidas por el usuario actual
+    if request.user.is_authenticated:
+        # Cambiado 'user' por 'uploaded_by'
+        user_songs = Song.objects.filter(uploaded_by=request.user)
+    else:
+        user_songs = []
+
+    # Obtener las canciones subidas por otros usuarios
+    other_songs = Song.objects.exclude(
+        uploaded_by=request.user) if request.user.is_authenticated else Song.objects.all()
+
+    # Renderizar la página con las canciones
+    return render(request, 'home.html', {
+        'message': message,
+        'user_songs': user_songs,
+        'other_songs': other_songs,
+    })
 
 
 def logout_view(request):
@@ -95,12 +114,14 @@ def studio(request):
         title = request.POST.get('title')
         artist = request.POST.get('artist', 'Desconocido')
         audio_file = request.FILES.get('audio_file')
+        cover_image = request.FILES.get('cover_image')  # Obtener la portada
 
         if title and audio_file:
             song = Song.objects.create(
                 title=title,
                 artist=artist,
                 audio_file=audio_file,
+                cover_image=cover_image,  # Guardar la portada
                 uploaded_by=request.user
             )
             song.save()

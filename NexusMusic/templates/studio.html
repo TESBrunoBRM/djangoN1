@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Studio</title>
     <link rel="stylesheet" href="{% static 'css/stylesHome.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         .container {
             max-width: 900px;
@@ -26,7 +27,7 @@
         button {
             display: flex;
             justify-content: center;
-            width: 250px;
+            width: 100px;
         }
 
         h2 {
@@ -156,12 +157,153 @@
         .textInputWrapper:focus-within .textInput::placeholder {
             opacity: 0;
         }
+
+        /* Contenedor principal para centrar */
+        .file-upload-container {
+            width: 50%;
+            /* Ancho ajustable */
+            max-width: 500px;
+            margin: 20px auto;
+            /* Centra los elementos y añade margen */
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            /* Coloca las cajas en una columna */
+        }
+
+        /* Espaciado adicional entre las cajas */
+        .file-upload-container+.file-upload-container {
+            margin-top: 20px;
+            /* Espaciado entre contenedores */
+        }
+
+        .file-upload {
+            position: relative;
+            border: 2px dashed #b8bcbf;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background-color: rgb(255, 255, 255);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .file-upload:hover {
+            background-color: #e2e6ea;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 50px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .file-upload p {
+            margin: 0;
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        .file-upload.dragover {
+            background-color: #007bff;
+            color: white;
+        }
+
+
+        .song-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px;
+        }
+
+        .song-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .song-list img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .song-list a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .song-list p {
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #ccc;
+        }
+
+        /* Reproductor */
+        #music-player {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111;
+            color: #fff;
+            padding: 8px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        #music-player img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .progress-container {
+            width: 600px;
+            height: 5px;
+            background: #333;
+            margin: 10px 0;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #fff;
+            width: 0;
+        }
     </style>
 </head>
 
 <body>
     <nav>
         <ul>
+            <li><a href="{% url 'home' %}">Home</a></li> <!-- Botón de Home agregado -->
             <li><a href="{% url 'playlist' %}">Playlist</a></li>
             <li><a href="{% url 'account' %}">Cuenta</a></li>
             <li><a href="{% url 'search' %}">Búsqueda</a></li>
@@ -185,22 +327,36 @@
                 <input placeholder="Título de la canción" type="text" class="textInput" name="title" required>
             </div>
             <div class="textInputWrapper">
-                <input placeholder="Artista (opcional)" type="text" class="textInput" name="artist" required>
+                <input placeholder="Artista (opcional)" type="text" class="textInput" name="artist">
             </div>
-            <div class="container1" name="audio_audio" required>
-                <div class="folder">
-                    <div class="top"></div>
-                    <div class="bottom"></div>
+            <div class="file-upload-container">
+                <div class="file-upload">
+                    <input multiple class="file-input" id="audioInput" type="file" name="audio_file" accept="audio/*" />
+                    <label class="file-label" for="audioInput">
+                        <i class="upload-icon">📁</i>
+                        <p class="upload-text">Arrastre y suelte sus archivos aquí o haga clic para cargarlos (Solo
+                            Audios)</p>
+                    </label>
+                    <p class="file-name" style="display: none; color: #007bff; font-weight: bold; margin-top: 10px;">
+                    </p>
                 </div>
-                <label class="custom-file-upload">
-                    <input class="file" type="file" name="audio_file" />
-                    Seleccionar archivo
-                </label>
+            </div>
+            <div class="file-upload-container">
+                <div class="file-upload">
+                    <input multiple class="file-input" id="imageInput" type="file" name="cover_image"
+                        accept="image/*" />
+                    <label class="file-label" for="imageInput">
+                        <i class="upload-icon">📁</i>
+                        <p class="upload-text">Arrastre y suelte sus archivos aquí o haga clic para cargarlos (Solo
+                            Imagenes)</p>
+                    </label>
+                    <p class="file-name" style="display: none; color: #007bff; font-weight: bold; margin-top: 10px;">
+                    </p>
+                </div>
             </div>
             <div class="container-button">
                 <button type="submit" class="button">Subir</button>
             </div>
-
         </form>
 
         <h2>Tus Canciones Subidas</h2>
@@ -208,20 +364,178 @@
         <ul class="song-list">
             {% for song in songs %}
             <li>
-                <div>
-                    <strong>{{ song.title }}</strong> - Subida el {{ song.uploaded_at }}
+                <div style="display: flex; align-items: center;" class="song-item"
+                    data-audio-url="{{ song.audio_file.url }}" data-title="{{ song.title }}"
+                    data-artist="{{ song.artist }}"
+                    data-cover="{% if song.cover_image %}{{ song.cover_image.url }}{% else %}{% static 'default_cover.png' %}{% endif %}">
+                    {% if song.cover_image %}
+                    <img src="{{ song.cover_image.url }}" alt="Portada de {{ song.title }}">
+                    {% else %}
+                    <img src="{% static 'default_cover.png' %}" alt="Portada por defecto">
+                    {% endif %}
+                    <div>
+                        <strong>{{ song.title }}</strong>
+                        <p>{{ song.artist }}</p>
+                    </div>
                 </div>
-                <audio controls>
-                    <source src="{{ song.audio_file.url }}" type="audio/mpeg">
-                    Tu navegador no soporta la reproducción de audio.
-                </audio>
             </li>
             {% endfor %}
         </ul>
         {% else %}
         <p class="empty-message">No has subido ninguna canción aún.</p>
         {% endif %}
-    </div>
+
+        <!-- Reproductor -->
+        <div id="music-player">
+            <div class="player-controls">
+                <img id="player-cover" src="{% static 'default_cover.png' %}" alt="Portada">
+                <div>
+                    <strong id="player-title">Sin título</strong>
+                    <p id="player-artist">Artista desconocido</p>
+                    <div class="progress-container" id="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+                <button id="play-pause-btn"><i class="fas fa-play"></i></button>
+            </div>
+            <audio id="audio"></audio>
+        </div>
+        <script>
+            // Variables principales
+            const audio = document.getElementById('audio');
+            const player = document.getElementById('music-player');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            const playerCover = document.getElementById('player-cover');
+            const playerTitle = document.getElementById('player-title');
+            const playerArtist = document.getElementById('player-artist');
+            const songItems = document.querySelectorAll('.song-item');
+
+            let currentSong = null;
+
+            // Función para cargar una canción
+            function loadSong(song) {
+                const audioUrl = song.getAttribute('data-audio-url');
+                const title = song.getAttribute('data-title');
+                const artist = song.getAttribute('data-artist');
+                const cover = song.getAttribute('data-cover');
+
+                audio.src = audioUrl;
+                playerTitle.textContent = title;
+                playerArtist.textContent = artist;
+                playerCover.src = cover;
+
+                player.style.display = 'block';
+                playSong();
+            }
+
+            // Reproducir canción
+            function playSong() {
+                audio.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+
+            // Pausar canción
+            function pauseSong() {
+                audio.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+
+            // Control de play/pause
+            playPauseBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    playSong();
+                } else {
+                    pauseSong();
+                }
+            });
+
+            // Actualizar progreso
+            audio.addEventListener('timeupdate', () => {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+            });
+
+            // Cambiar posición del audio al hacer clic en la barra de progreso
+            progressContainer.addEventListener('click', (e) => {
+                const width = progressContainer.clientWidth;
+                const clickX = e.offsetX;
+                const duration = audio.duration;
+
+                audio.currentTime = (clickX / width) * duration;
+            });
+
+            // Seleccionar canción
+            songItems.forEach(song => {
+                song.addEventListener('click', () => {
+                    currentSong = song;
+                    loadSong(song);
+                });
+            });
+
+
+
+
+
+
+
+
+
+            // Script para archivos de audio
+            document.querySelectorAll('.file-input[name="audio_file"]').forEach((input) => {
+                input.addEventListener('change', function () {
+                    const fileNameElement = this.closest('.file-upload').querySelector('.file-name');
+                    const uploadTextElement = this.closest('.file-upload').querySelector('.upload-text');
+
+                    if (this.files.length > 0) {
+                        const files = Array.from(this.files);
+                        const validFiles = files.filter(file => file.type.startsWith('audio/')); // Verificar solo audios
+
+                        if (validFiles.length > 0) {
+                            fileNameElement.textContent = validFiles.map(file => file.name).join(', ');
+                            fileNameElement.style.display = 'block';
+                            uploadTextElement.style.display = 'none';
+                        } else {
+                            alert('Por favor, sube solo archivos de audio.');
+                            this.value = ''; // Resetear input
+                            fileNameElement.style.display = 'none';
+                            uploadTextElement.style.display = 'block';
+                        }
+                    } else {
+                        fileNameElement.style.display = 'none';
+                        uploadTextElement.style.display = 'block';
+                    }
+                });
+            });
+
+            // Script para archivos de imagen
+            document.querySelectorAll('.file-input[name="cover_image"]').forEach((input) => {
+                input.addEventListener('change', function () {
+                    const fileNameElement = this.closest('.file-upload').querySelector('.file-name');
+                    const uploadTextElement = this.closest('.file-upload').querySelector('.upload-text');
+
+                    if (this.files.length > 0) {
+                        const files = Array.from(this.files);
+                        const validFiles = files.filter(file => file.type.startsWith('image/')); // Verificar solo imágenes
+
+                        if (validFiles.length > 0) {
+                            fileNameElement.textContent = validFiles.map(file => file.name).join(', ');
+                            fileNameElement.style.display = 'block';
+                            uploadTextElement.style.display = 'none';
+                        } else {
+                            alert('Por favor, sube solo archivos de imagen.');
+                            this.value = ''; // Resetear input
+                            fileNameElement.style.display = 'none';
+                            uploadTextElement.style.display = 'block';
+                        }
+                    } else {
+                        fileNameElement.style.display = 'none';
+                        uploadTextElement.style.display = 'block';
+                    }
+                });
+            });
+        </script>
 </body>
 
 </html>
