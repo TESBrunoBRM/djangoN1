@@ -6,8 +6,8 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('', views.register, name='register'),
-    path('login/', views.user_login, name='login'),
+    path('', views.user_login, name='login'),
+    path('register/', views.register, name='register'),
     path('home/', views.home, name='home'),
     # Ruta para cerrar sesión
     path('playlist/', views.playlist, name='playlist'),
